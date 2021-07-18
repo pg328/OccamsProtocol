@@ -19,12 +19,13 @@ export default function TabOneScreen() {
         if (isRunning)
             setTimeout(() => {
                 setSecondCount((c) => c + 1);
-            }, 1);
+            }, 1000);
     }, [isRunning, secondCount]);
 
     const start = () => {
         setIsRunning(true);
         setSecondCount(0);
+        editing && stopEdit();
     };
 
     const [editing, setIsEditing] = useState<Boolean>(false);
@@ -48,10 +49,10 @@ export default function TabOneScreen() {
         <View style={styles.container}>
             <TimerFunction {...{isRunning, secondCount, finish, start}}>
                 <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-                <WeightInfo editing={editing} weightTitle={'Lateral PullDown'} weightObject={lpd} setter={setLPD} />
+                <WeightInfo editing={editing} weightTitle={'Lateral Pull Down'} weightObject={lpd} setter={setLPD} />
                 <WeightInfo editing={editing} weightTitle={'Shoulder Press'} weightObject={sp} setter={setSP} />
             </TimerFunction>
-            {!isRunning ? (
+            {!isRunning && (
                 <TouchableOpacity
                     onPress={editing ? stopEdit : edit}
                     style={{
@@ -84,8 +85,6 @@ export default function TabOneScreen() {
                         </>
                     )}
                 </TouchableOpacity>
-            ) : (
-                stopEdit()
             )}
         </View>
     );

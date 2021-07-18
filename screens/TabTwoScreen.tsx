@@ -23,6 +23,7 @@ export default function TabTwoScreen() {
     const start = () => {
         setIsRunning(true);
         setSecondCount(0);
+        editing && stopEdit();
     };
 
     const finish = () => {
@@ -48,7 +49,7 @@ export default function TabTwoScreen() {
                 <WeightInfo editing={editing} weightTitle={'Bench Press'} weightObject={bp} setter={setBP} />
                 <WeightInfo editing={editing} weightTitle={'Leg Press'} weightObject={lp} setter={setLP} />
             </TimerFunction>
-            {!isRunning ? (
+            {!isRunning && (
                 <TouchableOpacity
                     onPress={editing ? stopEdit : edit}
                     style={{
@@ -81,8 +82,6 @@ export default function TabTwoScreen() {
                         </>
                     )}
                 </TouchableOpacity>
-            ) : (
-                stopEdit()
             )}
         </View>
     );
