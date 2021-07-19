@@ -3,17 +3,18 @@ import {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from '../components/Themed';
 import TimerFunction from '../components/TimerFunction';
-import {changeWeight, Collection, setStateFromFirebase} from '../components/utils';
+import {Collection, emptyCollection} from '../components/utils';
 import WeightInfo from '../components/WeightInfo';
 import {Ionicons} from '@expo/vector-icons';
+import {get, set} from '../components/Storage';
 
 export default function TabTwoScreen() {
     const [isRunning, setIsRunning] = useState<Boolean>(false);
     const [secondCount, setSecondCount] = useState<number>(0);
 
     useEffect(() => {
-        setStateFromFirebase(setBP, 'benchPress');
-        setStateFromFirebase(setLP, 'legPress');
+        get('benchPress').then((benchPress) => setBP(benchPress || emptyCollection));
+        get('legPress').then((legPress) => setLP(legPress || emptyCollection));
         if (isRunning)
             setTimeout(() => {
                 setSecondCount((c) => c + 1);
@@ -36,12 +37,12 @@ export default function TabTwoScreen() {
         setIsEditing(true);
     };
     const stopEdit = () => {
-        changeWeight('benchPress', bp);
-        changeWeight('legPress', lp);
+        set('benchPress', bp);
+        set('legPress', lp);
         setIsEditing(false);
     };
-    const [bp, setBP] = useState<Collection>();
-    const [lp, setLP] = useState<Collection>();
+    const [bp, setBP] = useState<Collection>(emptyCollection);
+    const [lp, setLP] = useState<Collection>(emptyCollection);
     return (
         <View style={styles.container}>
             <TimerFunction {...{isRunning, secondCount, finish, start}}>

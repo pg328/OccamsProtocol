@@ -50,10 +50,10 @@ const TimerFunction = ({isRunning, secondCount, finish, start, children}: TFProp
                                 }}
                             >
                                 {11 - ((secondCount - 5) % 11) <= 5
-                                    ? 'UP'
+                                    ? 'DOWN'
                                     : 11 - ((secondCount - 5) % 11) === 6
                                     ? 'PAUSE'
-                                    : 'DOWN'}
+                                    : 'UP'}
                             </Text>
                         )}
                         <Text

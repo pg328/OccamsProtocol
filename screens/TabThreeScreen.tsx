@@ -2,10 +2,6 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from '../components/Themed';
-import TimerFunction from '../components/TimerFunction';
-import {changeWeight, Collection, setStateFromFirebase} from '../components/utils';
-import WeightInfo from '../components/WeightInfo';
-import {Ionicons} from '@expo/vector-icons';
 
 export default function TabTwoScreen() {
     const [isRunning, setIsRunning] = useState<Boolean>(false);
@@ -30,9 +26,9 @@ export default function TabTwoScreen() {
 
     const WAIT_PERIOD = 5;
     const REP_COUNT = 5;
-    const UP = 1;
+    const DOWN = 1;
     const PAUSE = 0;
-    const DOWN = 2;
+    const UP = 2;
 
     return (
         <View style={styles.container}>
@@ -50,15 +46,15 @@ export default function TabTwoScreen() {
                         >
                             {secondCount < WAIT_PERIOD
                                 ? 'Get Ready!'
-                                : secondCount < REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD
-                                ? 'Rep ' + (1 + Math.floor((secondCount - WAIT_PERIOD) / (UP + PAUSE + DOWN)))
-                                : secondCount < REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD + 60
+                                : secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD
+                                ? 'Rep ' + (1 + Math.floor((secondCount - WAIT_PERIOD) / (DOWN + PAUSE + UP)))
+                                : secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD + 60
                                 ? `REST: ${
-                                      REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD + 60 - secondCount
+                                      REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD + 60 - secondCount
                                   } seconds left...`
                                 : finish()}
                         </Text>
-                        {secondCount >= WAIT_PERIOD && secondCount < REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD && (
+                        {secondCount >= WAIT_PERIOD && secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD && (
                             <Text
                                 style={{
                                     fontSize: 40,
@@ -68,12 +64,12 @@ export default function TabTwoScreen() {
                                     paddingBottom: 10,
                                 }}
                             >
-                                {UP + PAUSE + DOWN - ((secondCount - WAIT_PERIOD) % (UP + PAUSE + DOWN)) <= UP
-                                    ? 'UP'
-                                    : UP + PAUSE + DOWN - ((secondCount - WAIT_PERIOD) % (UP + PAUSE + DOWN)) ===
-                                      UP + PAUSE
+                                {DOWN + PAUSE + UP - ((secondCount - WAIT_PERIOD) % (DOWN + PAUSE + UP)) <= DOWN
+                                    ? 'DOWN'
+                                    : DOWN + PAUSE + UP - ((secondCount - WAIT_PERIOD) % (DOWN + PAUSE + UP)) ===
+                                      DOWN + PAUSE
                                     ? 'PAUSE'
-                                    : 'DOWN'}
+                                    : 'UP'}
                             </Text>
                         )}
                         <Text
@@ -85,8 +81,8 @@ export default function TabTwoScreen() {
                                 paddingBottom: 10,
                             }}
                         >
-                            {secondCount < REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD &&
-                                'Timer: ' + (REP_COUNT * (UP + PAUSE + DOWN) + WAIT_PERIOD - secondCount) + ' seconds'}
+                            {secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD &&
+                                'Timer: ' + (REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD - secondCount) + ' seconds'}
                         </Text>
                     </>
                 ) : (

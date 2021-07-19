@@ -4,18 +4,19 @@ import {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Text, View} from '../components/Themed';
 import TimerFunction from '../components/TimerFunction';
-import {changeWeight, Collection, setStateFromFirebase} from '../components/utils';
+import {Collection, emptyCollection} from '../components/utils';
 import {Ionicons} from '@expo/vector-icons';
 import {TextInput} from 'react-native-gesture-handler';
 import WeightInfo from '../components/WeightInfo';
+import {get, set} from '../components/Storage';
 
 export default function TabOneScreen() {
     const [isRunning, setIsRunning] = useState<Boolean>(false);
     const [secondCount, setSecondCount] = useState<number>(0);
 
     useEffect(() => {
-        setStateFromFirebase(setLPD, 'latPullDown');
-        setStateFromFirebase(setSP, 'shoulderPress');
+        get('latPullDown').then((latPullDown) => setLPD(latPullDown || emptyCollection));
+        get('shoulderPress').then((shoulderPress) => setSP(shoulderPress || emptyCollection));
         if (isRunning)
             setTimeout(() => {
                 setSecondCount((c) => c + 1);
@@ -33,8 +34,8 @@ export default function TabOneScreen() {
         setIsEditing(true);
     };
     const stopEdit = () => {
-        changeWeight('latPullDown', lpd);
-        changeWeight('shoulderPress', sp);
+        set('latPullDown', lpd);
+        set('shoulderPress', sp);
         setIsEditing(false);
     };
 
@@ -43,8 +44,8 @@ export default function TabOneScreen() {
         return 'Finished!';
     };
 
-    const [lpd, setLPD] = useState<Collection>();
-    const [sp, setSP] = useState<Collection>();
+    const [lpd, setLPD] = useState<Collection>(emptyCollection);
+    const [sp, setSP] = useState<Collection>(emptyCollection);
     return (
         <View style={styles.container}>
             <TimerFunction {...{isRunning, secondCount, finish, start}}>
