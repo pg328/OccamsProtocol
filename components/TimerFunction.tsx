@@ -7,8 +7,15 @@ interface TFProps {
     finish: () => string;
     start: () => void;
     children?: React.ReactNode;
+    legPress?: Boolean;
 }
-const TimerFunction = ({isRunning, secondCount, finish, start, children}: TFProps) => {
+const TimerFunction = ({isRunning, secondCount, finish, start, children, legPress = false}: TFProps) => {
+    const WAIT_PERIOD = 5;
+    const REP_COUNT = legPress ? 10 : 7;
+    const DOWN = 5;
+    const PAUSE = 1;
+    const UP = 5;
+    const TUT = REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD;
     return (
         <>
             <>
@@ -31,15 +38,15 @@ const TimerFunction = ({isRunning, secondCount, finish, start, children}: TFProp
                                     : secondCount === 4
                                     ? 'Get Ready: 1...'
                                     : 'Get Ready: 3...'
-                                : secondCount < 82
-                                ? 'Rep ' + (1 + Math.floor((secondCount - 5) / 11))
-                                : secondCount < 262
-                                ? `REST: ${Math.floor((180 + 82 - secondCount) / 60)}:${
-                                      (180 + 82 - secondCount) % 60 < 10 ? '0' : ''
-                                  }${(180 + 82 - secondCount) % 60} left`
+                                : secondCount < TUT
+                                ? 'Rep ' + (1 + Math.floor((secondCount - WAIT_PERIOD) / (DOWN + PAUSE + UP)))
+                                : secondCount < TUT + 180
+                                ? `REST: ${Math.floor((180 + TUT - secondCount) / 60)}:${
+                                      (180 + TUT - secondCount) % 60 < 10 ? '0' : ''
+                                  }${(180 + TUT - secondCount) % 60} left`
                                 : finish()}
                         </Text>
-                        {secondCount >= 5 && secondCount < 82 && (
+                        {secondCount >= 5 && secondCount < TUT && (
                             <Text
                                 style={{
                                     fontSize: 40,
@@ -49,11 +56,21 @@ const TimerFunction = ({isRunning, secondCount, finish, start, children}: TFProp
                                     paddingBottom: 10,
                                 }}
                             >
-                                {11 - ((secondCount - 5) % 11) <= 5
-                                    ? 'DOWN'
-                                    : 11 - ((secondCount - 5) % 11) === 6
+                                {secondCount < WAIT_PERIOD + UP
+                                    ? 'UP'
+                                    : DOWN +
+                                          PAUSE +
+                                          UP -
+                                          ((secondCount - WAIT_PERIOD + UP + 1) % (DOWN + PAUSE + UP)) <=
+                                      UP
+                                    ? 'UP'
+                                    : DOWN +
+                                          PAUSE +
+                                          UP -
+                                          ((secondCount - WAIT_PERIOD + UP + 1) % (DOWN + PAUSE + UP)) ===
+                                      UP + 1
                                     ? 'PAUSE'
-                                    : 'UP'}
+                                    : 'DOWN'}
                             </Text>
                         )}
                         <Text
@@ -65,10 +82,10 @@ const TimerFunction = ({isRunning, secondCount, finish, start, children}: TFProp
                                 paddingBottom: 10,
                             }}
                         >
-                            {secondCount < 82 &&
-                                `Timer: ${Math.floor((180 + 82 - secondCount) / 60)}:${
-                                    (180 + 82 - secondCount) % 60 < 10 ? '0' : ''
-                                }${(180 + 82 - secondCount) % 60} left`}
+                            {secondCount < TUT &&
+                                `Timer: ${Math.floor((180 + TUT - secondCount) / 60)}:${
+                                    (180 + TUT - secondCount) % 60 < 10 ? '0' : ''
+                                }${(180 + TUT - secondCount) % 60} left`}
                         </Text>
                     </>
                 ) : (

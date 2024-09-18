@@ -45,7 +45,13 @@ export default function TabTwoScreen() {
                             }}
                         >
                             {secondCount < WAIT_PERIOD
-                                ? 'Get Ready!'
+                                ? secondCount < 2
+                                    ? 'Get Ready!'
+                                    : secondCount === 3
+                                    ? 'Get Ready: 2...'
+                                    : secondCount === 4
+                                    ? 'Get Ready: 1...'
+                                    : 'Get Ready: 3...'
                                 : secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD
                                 ? 'Rep ' + (1 + Math.floor((secondCount - WAIT_PERIOD) / (DOWN + PAUSE + UP)))
                                 : secondCount < REP_COUNT * (DOWN + PAUSE + UP) + WAIT_PERIOD + 60
